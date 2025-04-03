@@ -1,0 +1,17 @@
+# Node.js
+node_modules/
+db_backup/
+package-lock.json
+
+# Editor/IDE specific
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+
+# Environment variables
+.env
+.env.local
+!.env.example

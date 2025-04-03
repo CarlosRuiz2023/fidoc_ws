@@ -1,0 +1,69 @@
+[13-11-2024 11:55:28] ERROR: Estado no encontrado: Guanajuato
+[13-11-2024 11:57:08] ERROR: Municipio no encontrado: LEÓN en el estado GUANAJUATO
+[13-11-2024 11:58:03] ERROR: Municipio no encontrado: LEON en el estado GUANAJUATO
+[13-11-2024 12:50:22] ERROR: string violation: vertices cannot be an array or an object
+[13-11-2024 12:55:48] ERROR: WHERE parameter "id_zona" has invalid "undefined" value
+[13-11-2024 13:40:47] ERROR: inserción o actualización en la tabla «tbl_rutas» viola la llave foránea «tbl_rutas_id_usuario_creador_fkey»
+[13-11-2024 13:47:07] ERROR: inserción o actualización en la tabla «tbl_rutas» viola la llave foránea «tbl_rutas_id_ruta_previa_fkey»
+[13-11-2024 13:57:41] ERROR: values.map is not a function
+[13-11-2024 14:00:00] ERROR: values.map is not a function
+[13-11-2024 14:02:10] ERROR: values.map is not a function
+[13-11-2024 14:03:09] ERROR: values.map is not a function
+[13-11-2024 14:04:45] ERROR: values.map is not a function
+[13-11-2024 14:05:02] ERROR: values.map is not a function
+[13-11-2024 14:06:22] ERROR: values.map is not a function
+[13-11-2024 14:07:17] ERROR: Cannot read properties of undefined (reading 'split')
+[13-11-2024 14:09:46] ERROR: values.map is not a function
+[13-11-2024 14:11:09] ERROR: values.map is not a function
+[13-11-2024 14:12:07] ERROR: values.map is not a function
+[13-11-2024 14:38:45] ERROR: WHERE parameter "id_ruta" has invalid "undefined" value
+[13-11-2024 16:06:08] ERROR: Request failed with status code 400
+[13-11-2024 16:07:10] ERROR: Request failed with status code 400
+[13-11-2024 16:12:12] ERROR: la sintaxis de entrada no es válida para tipo double precision: «52.518591,13.341621»
+[13-11-2024 16:16:55] ERROR: Request failed with status code 400
+[13-11-2024 16:17:32] ERROR: Request failed with status code 400
+[13-11-2024 16:18:18] ERROR: Request failed with status code 400
+[13-11-2024 16:21:34] ERROR: Request failed with status code 400
+[13-11-2024 16:22:26] ERROR: Request failed with status code 400
+[13-11-2024 16:25:23] ERROR: Request failed with status code 400
+[13-11-2024 16:31:25] ERROR: Request failed with status code 400
+[13-11-2024 16:32:05] ERROR: Request failed with status code 400
+[14-11-2024 10:26:46] ERROR: DetalleRuta is not associated to Ruta!
+[14-11-2024 10:32:49] ERROR: DetalleRuta is not associated to Ruta!
+[14-11-2024 10:33:19] ERROR: Zona is not associated to DetalleRuta!
+[14-11-2024 10:52:13] ERROR: DetalleRuta is associated to Ruta using an alias. You've included an alias (detalles), but it does not match the alias(es) defined in your association (detallesRuta).
+[14-11-2024 10:52:49] ERROR: Zona is associated to DetalleRuta using an alias. You've included an alias (zona), but it does not match the alias(es) defined in your association (zonaDetalle).
+[14-11-2024 10:53:21] ERROR: falta una entrada para la tabla «detalles» en la cláusula FROM
+[14-11-2024 10:54:24] ERROR: falta una entrada para la tabla «detalles» en la cláusula FROM
+[14-11-2024 10:57:01] ERROR: no existe la columna detallesRuta->zonaDetalle.zona
+[14-11-2024 11:04:16] ERROR: no existe la columna detallesRuta->zonaDetalle.zona
+[14-11-2024 11:05:55] ERROR: falta una entrada para la tabla «detallesruta» en la cláusula FROM
+[14-11-2024 11:09:11] ERROR: falta una entrada para la tabla «detallesruta» en la cláusula FROM
+[14-11-2024 11:15:48] ERROR: no existe la columna detallesRuta.id_zona
+[14-11-2024 11:16:35] ERROR: no existe la columna detallesRuta.id_zona
+[14-11-2024 11:17:30] ERROR: no existe la columna detallesRuta.id_zona
+[14-11-2024 11:28:33] ERROR: no existe la columna detallesRuta.id_punto_de_control
+[14-11-2024 11:46:06] ERROR: DetalleRuta is not associated to DetalleRuta!
+[14-11-2024 12:10:22] ERROR: Request failed with status code 400
+[14-11-2024 12:16:50] ERROR: Request failed with status code 400
+[14-11-2024 12:17:13] ERROR: Request failed with status code 400
+[14-11-2024 12:17:50] ERROR: Request failed with status code 400
+[14-11-2024 12:18:43] ERROR: Request failed with status code 400
+[14-11-2024 12:19:25] ERROR: Request failed with status code 400
+[15-11-2024 10:09:38] ERROR: la sintaxis de entrada no es válida para tipo timestamp: «Invalid date»
+[15-11-2024 10:15:56] ERROR: Invalid time value
+[15-11-2024 10:16:38] ERROR: Invalid time value
+[15-11-2024 10:17:27] ERROR: Invalid time value
+[15-11-2024 10:18:00] ERROR: Invalid time value
+[15-11-2024 10:18:44] ERROR: Invalid time value
+[15-11-2024 10:19:01] ERROR: Invalid time value
+[15-11-2024 10:24:34] ERROR: Invalid time value
+[15-11-2024 10:25:40] ERROR: Invalid time value
+[15-11-2024 10:25:47] ERROR: Invalid time value
+[15-11-2024 13:12:47] ERROR: la sintaxis de entrada no es válida para tipo integer: «nones»
+[15-11-2024 17:10:19] ERROR: Class constructor Model cannot be invoked without 'new'
+[15-11-2024 17:12:18] ERROR: Class constructor Model cannot be invoked without 'new'
+[15-11-2024 17:15:56] ERROR: Class constructor Model cannot be invoked without 'new'
+[15-11-2024 17:16:51] ERROR: Class constructor Model cannot be invoked without 'new'
+[15-11-2024 17:20:04] ERROR: Class constructor Model cannot be invoked without 'new'
+[15-11-2024 17:22:58] ERROR: Class constructor Model cannot be invoked without 'new'

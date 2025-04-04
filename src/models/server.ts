@@ -2,13 +2,15 @@ const express = require("express");
 const cors = require ("cors");
 import { Application } from "express";
 import {dbAccess, dbPostgres} from "../db/connection";
-//import geocodificadorRoutes from "../routes/geocodificador.router";
+import obraRoutes from "../routes/obras.route";
+import cooperadorRoutes from "../routes/cooperadores.route";
 
 class Server {
   private app: Application;
   private port: string;
   private apiPaths = {
-    //pathGeocodificador: "/api/geocodificar",
+    pathObra: "/api/obra",
+    pathCooperador: "/api/cooperador"
   };
 
   constructor() {
@@ -52,7 +54,8 @@ class Server {
   }
 
   routes() {
-    //this.app.use(this.apiPaths.pathGeocodificador, geocodificadorRoutes);
+    this.app.use(this.apiPaths.pathObra, obraRoutes);
+    this.app.use(this.apiPaths.pathCooperador,cooperadorRoutes);
   }
 
   listen() {

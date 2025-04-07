@@ -107,7 +107,7 @@ const agregarObra = async (
 
     dbSqlServer.execSql(request); */
     //const obra = await dbSqlServer.execSql("select * from obra where obr_clv = '"+obr_clv+"'");
-    obra = 1;
+    //obra = 1;
 
     if (obra == null) {
       res.status(400).json({

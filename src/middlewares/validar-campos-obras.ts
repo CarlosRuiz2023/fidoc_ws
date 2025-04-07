@@ -213,11 +213,21 @@ const validarObr_cost = async (
       return;
     }
 
-    if (typeof obr_cost != "number") {
+    // Verifica que sea tipo número y no NaN
+    if (typeof obr_cost !== "number" || isNaN(obr_cost)) {
       res.status(400).json({
         success: false,
         result: null,
-        error: "La obr_cost proporcionado debe ser de tipo numerico",
+        error: "El obr_cost proporcionado debe ser de tipo numérico",
+      });
+      return;
+    }
+
+    if (obr_cost <= 0) {
+      res.status(400).json({
+        success: false,
+        result: null,
+        error: "El obr_cost deben de ser un numero positivo mayor a 0",
       });
       return;
     }
@@ -344,17 +354,39 @@ const validarObr_fecha = (
   try {
     const { obr_fecha = new Date() } = req.body;
 
-    // Expresión regular para validar el formato YYYY-MM-DD
-    const fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
+    // Expresión regular para validar el formato DD/MM/YYYY
+    const fechaRegex = /^\d{2}\/\d{2}\/\d{4}$/;
 
-    if (!fechaRegex.test(obr_fecha)) {
+    if (!obr_fecha || !fechaRegex.test(obr_fecha)) {
       res.status(400).json({
         success: false,
         result: null,
-        error: "El formato de la obr_fecha debe ser YYYY-MM-DD",
+        error: "El formato del obr_fecha debe ser DD/MM/YYYY",
       });
       return;
     }
+
+    // Validar si la fecha es real
+    const [diaStr, mesStr, anioStr] = obr_fecha.split("/");
+    const dia = parseInt(diaStr, 10);
+    const mes = parseInt(mesStr, 10) - 1; // En JS: enero = 0
+    const anio = parseInt(anioStr, 10);
+
+    const fecha = new Date(anio, mes, dia);
+
+    if (
+      fecha.getFullYear() !== anio ||
+      fecha.getMonth() !== mes ||
+      fecha.getDate() !== dia
+    ) {
+      res.status(400).json({
+        success: false,
+        result: null,
+        error: "La obr_fecha no es una fecha válida.",
+      });
+      return;
+    }
+
     next();
   } catch (error: any) {
     escribirErrorEnLog(error.message);
@@ -519,24 +551,81 @@ const validarFechaInicio_Vencimiento = (
       obr_fecvenp.setDate(obr_fecvenp.getDate() + 1);
     }
 
-    // Expresión regular para validar el formato YYYY-MM-DD
-    const fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
+    // Expresión regular para validar el formato DD/MM/YYYY
+    const fechaRegex = /^\d{2}\/\d{2}\/\d{4}$/;
 
-    if (!fechaRegex.test(obr_fecinip) || !fechaRegex.test(obr_fecvenp)) {
+    if (!obr_fecinip || !fechaRegex.test(obr_fecinip)) {
       res.status(400).json({
         success: false,
         result: null,
-        error: "El formato de las fechas debe ser YYYY-MM-DD en fecha inicio y fecha de vencimiento",
+        error: "El formato del obr_fecinip debe ser DD/MM/YYYY",
       });
       return;
     }
 
-    // Validar que la fecha de vencimiento sea mayor a la fecha de inicio
-    if (obr_fecvenp <= obr_fecinip) {
+    // Validar si la fecha es real
+    let [diaStr, mesStr, anioStr] = obr_fecinip.split("/");
+    let dia = parseInt(diaStr, 10);
+    let mes = parseInt(mesStr, 10) - 1; // En JS: enero = 0
+    let anio = parseInt(anioStr, 10);
+
+    let fecha = new Date(anio, mes, dia);
+
+    if (
+      fecha.getFullYear() !== anio ||
+      fecha.getMonth() !== mes ||
+      fecha.getDate() !== dia
+    ) {
       res.status(400).json({
         success: false,
         result: null,
-        error: "La fecha de vencimiento debe ser mayor a la fecha de inicio",
+        error: "La obr_fecinip no es una fecha válida.",
+      });
+      return;
+    }
+
+    if (!obr_fecvenp || !fechaRegex.test(obr_fecvenp)) {
+      res.status(400).json({
+        success: false,
+        result: null,
+        error: "El formato del obr_fecvenp debe ser DD/MM/YYYY",
+      });
+      return;
+    }
+
+    // Validar si la fecha es real
+    [diaStr, mesStr, anioStr] = obr_fecvenp.split("/");
+    dia = parseInt(diaStr, 10);
+    mes = parseInt(mesStr, 10) - 1; // En JS: enero = 0
+    anio = parseInt(anioStr, 10);
+
+    fecha = new Date(anio, mes, dia);
+
+    if (
+      fecha.getFullYear() !== anio ||
+      fecha.getMonth() !== mes ||
+      fecha.getDate() !== dia
+    ) {
+      res.status(400).json({
+        success: false,
+        result: null,
+        error: "La obr_fecvenp no es una fecha válida.",
+      });
+      return;
+    }
+
+    const [diaIni, mesIni, anioIni] = obr_fecinip.split("/").map(Number);
+    const [diaVen, mesVen, anioVen] = obr_fecvenp.split("/").map(Number);
+
+    const fechaInicio = new Date(anioIni, mesIni - 1, diaIni);
+    const fechaVencimiento = new Date(anioVen, mesVen - 1, diaVen);
+
+    // Comparar fechas
+    if (fechaVencimiento <= fechaInicio) {
+      res.status(400).json({
+        success: false,
+        result: null,
+        error: "La fecha de vencimiento debe ser mayor a la fecha de inicio.",
       });
       return;
     }
@@ -569,11 +658,20 @@ const validarObr_npago = async (
       return;
     }
 
-    if (typeof obr_npago != "number") {
+    if (typeof obr_npago != "number" || isNaN(obr_npago)) {
       res.status(400).json({
         success: false,
         result: null,
         error: "La obr_npago proporcionado debe ser de tipo numerico",
+      });
+      return;
+    }
+
+    if (obr_npago <= 0) {
+      res.status(400).json({
+        success: false,
+        result: null,
+        error: "El obr_npago deben de ser un numero positivo mayor a 0",
       });
       return;
     }

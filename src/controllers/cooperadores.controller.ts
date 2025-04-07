@@ -3,31 +3,6 @@ import { escribirErrorEnLog } from "../helpers/generarArchivoLog";
 import { dbAccess } from "../db/connection";
 
 /**
- * La función `obtenerCooperadores` recupera los cooperadores de la bd de Access
- */
-const obtenerCooperadores = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const cooperadores = await dbAccess.query('SELECT * FROM coops c1 INNER JOIN cooperador c2 on c1.coo_clv=c2.coo_clv ORDER BY c2.coo_venc1 DESC');
-
-    res.status(200).json({
-      success: true,
-      result: { cooperadores },
-      error: null,
-    });
-  } catch (error: any) {
-    escribirErrorEnLog(error.message);
-    res.status(500).json({
-      success: false,
-      result: null,
-      error: error.message,
-    });
-  }
-};
-
-/**
  * La función `obtenerCooperador` recupera un cooperador de la bd de Access mediante su clave
  */
 const obtenerCooperador = async (
@@ -36,7 +11,12 @@ const obtenerCooperador = async (
 ): Promise<void> => {
   try {
     const coo_clv = req.params.coo_clv;
-    const cooperador = await dbAccess.query(`SELECT * FROM coops c1 INNER JOIN cooperador c2 ON c1.coo_clv=c2.coo_clv WHERE c1.coo_clv = '${coo_clv}'`);
+    let cooperador = null
+    if(coo_clv.length==13){
+      cooperador = await dbAccess.query(`SELECT * FROM cooperador WHERE coo_clv = '${coo_clv}'`);
+    }else{
+      cooperador = await dbAccess.query(`SELECT * FROM cooperador WHERE coo_obr = '${coo_clv}'`);
+    }
 
     res.status(200).json({
       success: true,
@@ -62,7 +42,7 @@ const agregarCooperador = async (
 ): Promise<void> => {
   try {
     const { coo_clv, coo_pat, coo_mat, coo_nom, coo_num:coo_nof, coo_call, coo_col, coo_cp, coo_tel, coo_npag, coo_venc1, coo_mts, coo_pred } = req.body;
-    const query = `INSERT INTO coops (coo_clv,coo_pat,coo_mat,coo_nom,coo_nof,coo_call,coo_num,coo_col,coo_ciu,coo_est,coo_cp,coo_tel,coo_lote,coo_ant,coo_npag,coo_venc1,coo_obr,coo_mts,coo_inc,coo_clv1,coo_pred,coo_nombre,coo_pagos,coo_cargos,coo__gto_req,coo_gto_ejec,coo_notificado,coo_requerido,coo_ejecutado,coo_ultimoaviso,coo_propx,coo_rfc,coo_fiscal,coo_razonsoc,coo_grupo,coo_fecgrupo,coo_dec,coo_transferida) 
+    const query = `INSERT INTO cooperador (coo_clv,coo_pat,coo_mat,coo_nom,coo_nof,coo_call,coo_num,coo_col,coo_ciu,coo_est,coo_cp,coo_tel,coo_lote,coo_ant,coo_npag,coo_venc1,coo_obr,coo_mts,coo_inc,coo_clv1,coo_pred,coo_nombre,coo_pagos,coo_cargos,coo__gto_req,coo_gto_ejec,coo_notificado,coo_requerido,coo_ejecutado,coo_ultimoaviso,coo_propx,coo_rfc,coo_fiscal,coo_razonsoc,coo_grupo,coo_fecgrupo,coo_dec,coo_transferida) 
       VALUES('${coo_clv}','${coo_pat}','${coo_mat}','${coo_nom}','${coo_nof}','${coo_call}','','${coo_col}','LEON DE LOS ALDAMA','GUANAJUATO','${coo_cp}','${coo_tel}','1','0','${coo_npag}','${coo_venc1}','${coo_clv.substring(0,coo_clv.length-3)}','${coo_mts}','0','${coo_clv.substring(coo_clv.length - 3)}','${coo_pred}','${coo_pat+" "+coo_mat+" "+coo_nom}','0','0','0','0','01/01/1900','01/01/1900','01/01/1900','01/01/1900','0','0','0','0','0','01/01/1900','0','0')`;
     console.log(query);
     try {
@@ -70,7 +50,7 @@ const agregarCooperador = async (
     } catch (error) {
       
     }
-    const cooperador = await dbAccess.query(`SELECT * FROM coops WHERE coo_clv = '${coo_clv}'`);
+    const cooperador = await dbAccess.query(`SELECT * FROM cooperador WHERE coo_clv = '${coo_clv}'`);
 
     if (cooperador == null) {
       res.status(400).json({
@@ -198,7 +178,6 @@ const eliminarObra = async (
 };
 
 export {
-  obtenerCooperadores,
   obtenerCooperador,
   agregarCooperador
 };

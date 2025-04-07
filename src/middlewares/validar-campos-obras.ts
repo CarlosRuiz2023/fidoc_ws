@@ -619,7 +619,7 @@ const validarObr_opergob = async (
       res.status(400).json({
         success: false,
         result: null,
-        error: "La obr_call debe de ser menor a 31 caracteres",
+        error: "La obr_opergob debe de ser menor a 31 caracteres",
       });
       return;
     }

@@ -1,7 +1,7 @@
 const express = require("express");
-const cors = require ("cors");
+const cors = require("cors");
 import { Application } from "express";
-import {dbAccess, dbPostgres} from "../db/connection";
+import { dbAccess, dbPostgres } from "../db/connection";
 import obraRoutes from "../routes/obras.route";
 import cooperadorRoutes from "../routes/cooperadores.route";
 
@@ -31,15 +31,21 @@ class Server {
     }
     try {
       await dbAccess.query('SELECT 1+1 AS result')
-      .then((data :any)=> {
-        console.log("Database Access online");
-      })
-      .catch((error:any) => {
-        console.error(error);
-      });      
+        .then((data: any) => {
+          console.log("Database Access online");
+        })
+        .catch((error: any) => {
+          console.error(error);
+        });
     } catch (error) {
       throw new Error("" + error);
     }
+    /* try {
+      await dbSQLServer.authenticate();
+      console.log("Database SQL Server online");
+    } catch (error) {
+      throw new Error("" + error);
+    } */
   }
 
   middlewares() {
@@ -55,7 +61,7 @@ class Server {
 
   routes() {
     this.app.use(this.apiPaths.pathObra, obraRoutes);
-    this.app.use(this.apiPaths.pathCooperador,cooperadorRoutes);
+    this.app.use(this.apiPaths.pathCooperador, cooperadorRoutes);
   }
 
   listen() {

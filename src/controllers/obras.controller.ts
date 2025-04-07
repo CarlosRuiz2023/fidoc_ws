@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { escribirErrorEnLog } from "../helpers/generarArchivoLog";
 import { dbAccess } from "../db/connection";
+const tedious = require('tedious');
 
 /**
  * La función `obtenerObras` recupera las obras de la bd de Access
@@ -65,12 +66,48 @@ const agregarObra = async (
     const { obr_clv, obr_call, obr_col, obr_cost, obr_stat, obr_tramo, obr_fecha, obr_sis, col_nom, obr_programa, obr_fecinip, obr_fecvenp, obr_npago, obr_opergob } = req.body;
     const query = `INSERT INTO obra (obr_clv,obr_call,obr_col,obr_cost,obr_stat,obr_tramo,obr_fecha,obr_sis,col_nom,obr_programa,obr_fecinip,obr_fecvenp,obr_npago,obr_opergob,obr_cuentac,obr_digagr) VALUES('${obr_clv}','${obr_call}','${obr_col}',${obr_cost},'${obr_stat}','${obr_tramo}','${obr_fecha}','${obr_sis}','${col_nom}','${obr_programa}','${obr_fecinip}','${obr_fecvenp}',${obr_npago},'${obr_opergob}','','')`;
     console.log(query);
+    let obra = null;
     try {
       await dbAccess.query(query);
+      obra = await dbAccess.query(`SELECT * FROM obra WHERE obr_clv = '${obr_clv}'`);
     } catch (error) {
 
     }
-    const obra = await dbAccess.query(`SELECT * FROM obra WHERE obr_clv = '${obr_clv}'`);
+
+    /* const sql = `
+  INSERT INTO obra (obr_clv, obr_call, obr_col, obr_cost, obr_stat, obr_int, obr_tramo, obr_fecha, obr_sis, col_nom,obr_digito, obr_programa, obr_fecinip, obr_fecvenp, obr_npago, obr_opergob, obr_cuentac, obr_digagr)
+  VALUES (@obr_clv, @obr_call, @obr_col, @obr_cost, @obr_stat,'00:00:00.0000000', @obr_tramo, @obr_fecha, @obr_sis, @col_nom, 0,@obr_programa, @obr_fecinip, @obr_fecvenp, @obr_npago, @obr_opergob, '',0)
+`;
+
+    const request = new tedious.Request(sql, (err:any, rowCount:any) => {
+      if (err) {
+        console.error('Error inserting data:', err);
+        res.status(500).json({ success: false, result: null, error: err.message });
+      } else {
+        console.log(`${rowCount} row(s) inserted`);
+        res.status(200).json({ success: true, result: { rowCount }, error: null });
+      }
+    });
+
+    request.addParameter('obr_clv', tedious.TYPES.VarChar, obr_clv);
+    request.addParameter('obr_call', tedious.TYPES.VarChar, obr_call);
+    request.addParameter('obr_col', tedious.TYPES.VarChar, obr_col);
+    request.addParameter('obr_cost', tedious.TYPES.Decimal, obr_cost);
+    request.addParameter('obr_stat', tedious.TYPES.VarChar, obr_stat);
+    request.addParameter('obr_tramo', tedious.TYPES.VarChar, obr_tramo);
+    request.addParameter('obr_fecha', tedious.TYPES.Date, obr_fecha);
+    request.addParameter('obr_sis', tedious.TYPES.VarChar, obr_sis);
+    request.addParameter('col_nom', tedious.TYPES.VarChar, col_nom);
+    request.addParameter('obr_programa', tedious.TYPES.VarChar, obr_programa);
+    request.addParameter('obr_fecinip', tedious.TYPES.Date, obr_fecinip);
+    request.addParameter('obr_fecvenp', tedious.TYPES.Date, obr_fecvenp);
+    request.addParameter('obr_npago', tedious.TYPES.Int, obr_npago);
+    request.addParameter('obr_opergob', tedious.TYPES.VarChar, obr_opergob);
+    console.log(request);
+
+    dbSqlServer.execSql(request); */
+    //const obra = await dbSqlServer.execSql("select * from obra where obr_clv = '"+obr_clv+"'");
+    obra = 1;
 
     if (obra == null) {
       res.status(400).json({

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { escribirErrorEnLog } from "../helpers/generarArchivoLog";
-import { dbAccess } from "../db/connection";
+import { configSQLServer, dbAccess, sql } from "../db/connection";
 
 const validarCoop_clv = async (
   req: Request,
@@ -58,20 +58,52 @@ const validarCoop_clv = async (
         res.status(400).json({
           success: false,
           result: null,
-          error: "La coo_clv proporcionada no existe en la bd",
+          error: "La coo_clv proporcionada no existe en la bd de Access",
         });
         return;
       }
-    }else{
+      // Conectar a la base de datos
+      await sql.connect(configSQLServer);
+      // Crear request con parámetros
+      const request = new sql.Request();
+      request.input('coo_clv', sql.VarChar, coo_clv);
+      // Ejecutar consulta con parámetros
+      const predial = await request.query(`SELECT * FROM [dbo].[cooperador] WHERE [coo_obr] = @coo_clv`)
+      if (predial.recordset.length == 0) {
+        res.status(400).json({
+          success: false,
+          result: null,
+          error: "El coo_clv proporcionado no existe dentro de la base de datos de SQL Server",
+        });
+        return;
+      }
+      await sql.close();
+    } else {
       const cooperador = await dbAccess.query(`SELECT * FROM cooperador WHERE coo_clv = '${coo_clv}'`);
       if (cooperador.length == 0) {
         res.status(400).json({
           success: false,
           result: null,
-          error: "La coo_clv proporcionada no existe en la bd",
+          error: "La coo_clv proporcionada no existe en la bd de Access",
         });
         return;
       }
+      // Conectar a la base de datos
+      await sql.connect(configSQLServer);
+      // Crear request con parámetros
+      const request = new sql.Request();
+      request.input('coo_clv', sql.VarChar, coo_clv);
+      // Ejecutar consulta con parámetros
+      const predial = await request.query(`SELECT * FROM [dbo].[cooperador] WHERE [coo_clv] = @coo_clv`)
+      if (predial.recordset.length == 0) {
+        res.status(400).json({
+          success: false,
+          result: null,
+          error: "El coo_clv proporcionado no existe dentro de la base de datos de SQL Server",
+        });
+        return;
+      }
+      await sql.close();
     }
 
     next();
@@ -125,6 +157,23 @@ const validarCoop_clvNoExistente = async (
       });
       return;
     }
+
+    // Conectar a la base de datos
+    await sql.connect(configSQLServer);
+    // Crear request con parámetros
+    const request = new sql.Request();
+    request.input('coo_clv', sql.VarChar, coo_clv);
+    // Ejecutar consulta con parámetros
+    const predial = await request.query(`SELECT * FROM [dbo].[cooperador] WHERE [coo_clv] = @coo_clv`)
+    if (predial.recordset.length == 0) {
+      res.status(400).json({
+        success: false,
+        result: null,
+        error: "El coo_clv proporcionado no existe dentro de la base de datos de SQL Server",
+      });
+      return;
+    }
+    await sql.close();
 
     next();
   } catch (error: any) {

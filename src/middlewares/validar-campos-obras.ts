@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { escribirErrorEnLog } from "../helpers/generarArchivoLog";
-import { dbAccess } from "../db/connection";
+import { configSQLServer, dbAccess, sql } from "../db/connection";
 
 const validarObr_clv = async (
   req: Request,
@@ -37,10 +37,27 @@ const validarObr_clv = async (
       res.status(400).json({
         success: false,
         result: null,
-        error: "El obr_clv proporcionado no existe dentro de la base de datos",
+        error: "El obr_clv proporcionado no existe dentro de la base de datos de Access",
       });
       return;
     }
+
+    // Conectar a la base de datos
+    await sql.connect(configSQLServer);
+    // Crear request con parámetros
+    const request = new sql.Request();
+    request.input('obr_clv', sql.VarChar, obr_clv);
+    // Ejecutar consulta con parámetros
+    const predial = await request.query(`SELECT * FROM [dbo].[obra] WHERE [obr_clv] = @obr_clv`)
+    if(predial.recordset.length == 0){
+      res.status(400).json({
+        success: false,
+        result: null,
+        error: "El obr_clv proporcionado no existe dentro de la base de datos de SQL Server",
+      });
+      return;
+    }
+    await sql.close();
 
     next();
   } catch (error: any) {
@@ -88,10 +105,27 @@ const validarObr_clvNoExistente = async (
       res.status(400).json({
         success: false,
         result: null,
-        error: "El obr_clv proporcionado ya existe dentro de la base de datos",
+        error: "El obr_clv proporcionado ya existe dentro de la base de datos de Accesss",
       });
       return;
     }
+
+    // Conectar a la base de datos
+    await sql.connect(configSQLServer);
+    // Crear request con parámetros
+    const request = new sql.Request();
+    request.input('obr_clv', sql.VarChar, obr_clv);
+    // Ejecutar consulta con parámetros
+    const predial = await request.query(`SELECT * FROM [dbo].[obra] WHERE [obr_clv] = @obr_clv`)
+    if(predial.recordset.length > 0){
+      res.status(400).json({
+        success: false,
+        result: null,
+        error: "El obr_clv proporcionado ya existe dentro de la base de datos de SQL Server",
+      });
+      return;
+    }
+    await sql.close();
 
     next();
   } catch (error: any) {

@@ -177,14 +177,11 @@ const validarCV_pred = async (
 
     // Conectar a la base de datos
     await sql.connect(configSQLServer);
-
     // Crear request con parámetros
     const request = new sql.Request();
     request.input('CTA_PREDIAL', sql.VarChar, cta_predial);
-
     // Ejecutar consulta con parámetros
     const predial = await request.query(`SELECT * FROM [dbo].[CARTERA_VENCIDA] WHERE [CTA_PREDIAL] = @CTA_PREDIAL`)
-
     if(predial.recordset.length == 0){
       res.status(400).json({
         success: false,
@@ -193,6 +190,7 @@ const validarCV_pred = async (
       });
       return;
     }
+    await sql.close();
 
     next();
   } catch (error: any) {

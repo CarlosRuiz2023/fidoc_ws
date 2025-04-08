@@ -3,15 +3,19 @@ const cors = require("cors");
 const cronApp =require("../cron/cron");
 import { Application } from "express";
 import { conectarBDSQLServer, dbAccess, dbPostgres } from "../db/connection";
+
 import obraRoutes from "../routes/obras.route";
 import cooperadorRoutes from "../routes/cooperadores.route";
+import carteraVencidaRoutes from "../routes/carteraVencida.route";
+
 
 class Server {
   private app: Application;
   private port: string;
   private apiPaths = {
     pathObra: "/api/obra",
-    pathCooperador: "/api/cooperador"
+    pathCooperador: "/api/cooperador",
+    pathCarteraVencida: "/api/carteraVencida"
   };
 
   constructor() {
@@ -58,6 +62,7 @@ class Server {
   routes() {
     this.app.use(this.apiPaths.pathObra, obraRoutes);
     this.app.use(this.apiPaths.pathCooperador, cooperadorRoutes);
+    this.app.use(this.apiPaths.pathCarteraVencida, carteraVencidaRoutes);
   }
 
   listen() {

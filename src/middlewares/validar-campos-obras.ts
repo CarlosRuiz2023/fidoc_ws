@@ -733,6 +733,52 @@ const validarObr_opergob = async (
   }
 };
 
+const validarObr_inc = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { obr_inc } = req.body;
+
+    if (obr_inc === undefined) {
+      res.status(400).json({
+        success: false,
+        result: null,
+        error: "Falto proporcionar el obr_inc",
+      });
+      return;
+    }
+
+    if (typeof obr_inc != "number") {
+      res.status(400).json({
+        success: false,
+        result: null,
+        error: "El obr_inc proporcionado debe ser de tipo numerico",
+      });
+      return;
+    }
+
+    if (obr_inc < 0) {
+      res.status(400).json({
+        success: false,
+        result: null,
+        error: "El obr_inc debe de ser un numero positivo mayor o igual a 0",
+      });
+      return;
+    }
+
+    next();
+  } catch (error: any) {
+    escribirErrorEnLog(error.message);
+    res.status(500).json({
+      success: false,
+      result: null,
+      error: error.message,
+    });
+  }
+};
+
 export {
   validarObr_clv,
   validarObr_clvNoExistente,
@@ -747,5 +793,6 @@ export {
   validarObr_programa,
   validarFechaInicio_Vencimiento,
   validarObr_npago,
-  validarObr_opergob
+  validarObr_opergob,
+  validarObr_inc
 };

@@ -308,6 +308,82 @@ const actualizarEstatusObra = async (
 };
 
 /**
+ * La función `actualizarCostoObra` actualiza el incremento de una obra dentro de la bd de
+ */
+const actualizarCostoObra = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { obr_clv, obr_inc } = req.body;
+    try {
+      await dbAccess.query(`UPDATE obra set obr_inc=${obr_inc} WHERE obr_clv = '${obr_clv}'`);
+    } catch (error) {}
+    try {
+      await dbAccess.query(`UPDATE cooperador set coo_inc=${obr_inc} WHERE coo_obr = '${obr_clv}'`)
+    } catch (error) {}
+    let obra = null;
+
+    //obra = await dbAccess.query(`SELECT * FROM obra WHERE obr_clv = '${obr_clv}'`);
+
+    // Conectar a la base de datos
+    await sql.connect(configSQLServer);
+
+    // Crear request con parámetros
+    const request = new sql.Request();
+    request.input('obr_clv', sql.VarChar, obr_clv);
+    request.input('obr_inc', sql.Float, obr_inc);
+
+    // Ejecutar consulta con parámetros
+    const result = await request.query(`
+      UPDATE [dbo].[obra]
+      SET [obr_inc] = @obr_inc
+      WHERE [obr_clv] = @obr_clv
+    `);
+
+    const result2 = await request.query(`
+    UPDATE [dbo].[cooperador]
+      SET [coo_inc] = @obr_inc
+    WHERE [coo_obr] = @obr_clv
+    `);
+
+    const result3 = await request.query(`
+    UPDATE [dbo].[CARTERA_VENCIDA]
+      SET [INCREMENTO_OBRA] = @obr_inc,
+          [COO_INC] = @obr_inc,
+          [SALDOSIN] = [SALDOSIN] - [INCREMENTO_OBRA] + @obr_inc,
+          [SALDOCON] = [SALDOCON] - [INCREMENTO_OBRA] + @obr_inc
+    WHERE [OBRA] = @obr_clv
+    `);
+
+    if (result.rowsAffected[0] > 0) {
+
+      // Ejecutar consulta con parámetros
+      obra = await request.query(`SELECT * FROM [pFidoc].[dbo].[obra] WHERE [obr_clv] = @obr_clv`);
+      res.status(200).json({
+        success: true,
+        result: { obra: obra.recordset[0] },
+        error: null,
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        result: "No se actualizo el costo de la obra correctamente.",
+        error: null,
+      });
+    }
+    await sql.close();
+  } catch (error: any) {
+    escribirErrorEnLog(error.message);
+    res.status(500).json({
+      success: false,
+      result: null,
+      error: error.message,
+    });
+  }
+};
+
+/**
  * La función `eliminarObra` elimina una obra en la bd de Access
  */
 const eliminarObra = async (
@@ -363,5 +439,6 @@ export {
   agregarObra,
   actualizarObra,
   actualizarEstatusObra,
+  actualizarCostoObra,
   eliminarObra
 };

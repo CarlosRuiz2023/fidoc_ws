@@ -6,9 +6,9 @@ const sql = require('mssql');
 
 dotenv.config();
 
-const pathAccess = process.env.PATH_ACCESS || '../../../../../../../Fidoc/obrasdb992007.accdb';
+const pathAccess = process.env.PATH_ACCESS || 'C:/Fidoc/obrasdb992007.accdb';
 // Ruta al archivo de la base de datos
-const dbPath = path.join(__dirname, pathAccess);
+const dbPath = path.join(pathAccess);
 
 const dbPostgres = new Sequelize({
   dialect: "postgres",

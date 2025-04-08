@@ -159,7 +159,6 @@ const agregarCooperador = async (
     }
     await sql.close();
   } catch (error: any) {
-    console.log(error);
     escribirErrorEnLog(error.message);
     res.status(500).json({
       success: false,

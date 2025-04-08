@@ -38,7 +38,6 @@ const obtenerObra = async (
   try {
     const obr_clv = req.params.obr_clv;
     const obra = await dbAccess.query(`SELECT * FROM obra WHERE obr_clv = '${obr_clv}'`);
-    console.log(obra);
 
     res.status(200).json({
       success: true,
@@ -132,7 +131,6 @@ const agregarObra = async (
     }
     await sql.close();
   } catch (error: any) {
-    console.log(error);
     escribirErrorEnLog(error.message);
     res.status(500).json({
       success: false,

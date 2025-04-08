@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
+const cronApp =require("../cron/cron");
 import { Application } from "express";
-import { dbAccess, dbPostgres } from "../db/connection";
+import { conectarBDSQLServer, dbAccess, dbPostgres } from "../db/connection";
 import obraRoutes from "../routes/obras.route";
 import cooperadorRoutes from "../routes/cooperadores.route";
 
@@ -40,12 +41,7 @@ class Server {
     } catch (error) {
       throw new Error("" + error);
     }
-    /* try {
-      await dbSQLServer.authenticate();
-      console.log("Database SQL Server online");
-    } catch (error) {
-      throw new Error("" + error);
-    } */
+    conectarBDSQLServer();
   }
 
   middlewares() {
@@ -70,4 +66,5 @@ class Server {
     });
   }
 }
+cronApp.iniciarCron();
 export default Server;

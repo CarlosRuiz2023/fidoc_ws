@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { escribirErrorEnLog } from "../helpers/generarArchivoLog";
 import { configSQLServer, dbAccess, sql } from "../db/connection";
 import convertirFechaParaSQLServer from "../helpers/fechas";
+const tedious = require('tedious');
 
 /**
  * La función `obtenerObras` recupera las obras de la bd de Access

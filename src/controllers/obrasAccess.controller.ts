@@ -107,7 +107,7 @@ const actualizarObraAccess = async (
 
     }
     let obra = null;
-    obra = await dbAccess.query(`SELECT * FROM obra WHERE obr_clv = '${obr_clv}'`);
+    obra = await dbAccess.query(`SELECT * FROM obra WHERE obr_clv = '${obr_clv}'`); 
 
     if (obra!=null) {
       res.status(200).json({

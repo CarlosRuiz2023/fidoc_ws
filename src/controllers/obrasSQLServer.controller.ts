@@ -4,9 +4,9 @@ import { configSQLServer, dbAccess, sql } from "../db/connection";
 import convertirFechaParaSQLServer from "../helpers/fechas";
 
 /**
- * La función `obtenerObrasSQLServer` recupera las obras de la bd de Access
+ * La función `obtenerObrasSQL` recupera las obras de la bd de Access
  */
-const obtenerObrasSQLServer = async (
+const obtenerObras = async (
   req: Request,
   res: Response
 ): Promise<void> => {

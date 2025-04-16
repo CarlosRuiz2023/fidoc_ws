@@ -8,7 +8,6 @@ import obraRoutes from "../routes/obras.route";
 import cooperadorRoutes from "../routes/cooperadores.route";
 import carteraVencidaRoutes from "../routes/carteraVencida.route";
 
-
 class Server {
   private app: Application;
   private port: string;
